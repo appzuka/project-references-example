@@ -64,7 +64,7 @@ With webpack-dev-server, once the initial build is complete, changes to src/inde
 
 Making a change in animals/dog.ts causes 2 compilations.  The first is the compilation of the reference which takes around 1 second and the second compilation is less than 100ms when the project is rebuilt using the new output in lib.  With webpack-dev-server both compilations are reported in the webpack log.  With webpack and watch: true only the second compilation is reported although a delay of around 1 second is noticeable before the second compilation starts.
 
-If you turn off projectReferences in ts-loader and execute tsc -b -w in a different shell, the effect is the same.  You can see tsc -b -w takes around 1 second to compile the reference and then webpack builds the project. This is as expected because, under the hood, ts-loader is just using tsb to build the referenced projects.  It is just more convenient than having to run tsc separately.
+If you turn off projectReferences in ts-loader and execute tsc -b -w in a different shell, the effect is the same.  You can see tsc -b -w takes around 1 second to compile the reference and then webpack builds the project. This is as expected because, under the hood, ts-loader is just using tsc to build the referenced projects.  It is just more convenient than having to run tsc separately.
 
 ## Performance Summary
 
