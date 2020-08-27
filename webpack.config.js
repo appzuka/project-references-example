@@ -8,7 +8,7 @@ module.exports = {
       "path": __dirname+'/dist',
       "filename": "[name].js"
   },
-  "watch": true,
+  "watch": false,
   "context": __dirname, // to automatically find tsconfig.json
   "module": {
       "rules": [
@@ -18,8 +18,8 @@ module.exports = {
               "use": {
                   "loader": "ts-loader",
                   "options": {
-                      "transpileOnly": true,
-                      "projectReferences": true
+                      "transpileOnly": false,
+                      "projectReferences": false
                   }
               }
           }
@@ -32,5 +32,5 @@ module.exports = {
     ],
     extensions: [".js", ".ts"]
   },
-  plugins: [new ForkTsCheckerWebpackPlugin()]
+  // plugins: [new ForkTsCheckerWebpackPlugin()]
 }
