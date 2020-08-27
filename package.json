@@ -18,6 +18,13 @@
   },
   "homepage": "https://github.com/RyanCavanaugh/project-references-demo#readme",
   "dependencies": {
-    "typescript": "^3.5.3"
+    "ts-loader": "^8.0.3",
+    "typescript": "^3.9.7",
+    "webpack": "^4.44.1",
+    "webpack-cli": "^3.3.12",
+    "webpack-dev-server": "^3.11.0"
+  },
+  "devDependencies": {
+    "fork-ts-checker-webpack-plugin": "^5.1.0"
   }
 }

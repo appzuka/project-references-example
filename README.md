@@ -1,186 +1,73 @@
 # TypeScript Project References Demo
 
-## Files in this repository
+This repo is forked from https://github.com/RyanCavanaugh/project-references-demo.  It is to test project references with webpack, ts-loader and ForkTsCheckerWebpackPlugin.
 
-The structure of this repo is as follows:
 
-#### Source Code Folders
+
+## Project references
+
+With projectReferences = false the build will fail unless the references are pre-built:
 ```
-/core                  Base library for this application
-  /tsconfig.json         Config file for 'core' project
-  /utilities.ts          Submodule that exposes two utility functions
-/animals               Depends on 'core'
-  /tsconfig.json         Config file for 'animal' project
-  /animal.ts             Defines the 'animal' type
-  /dog.ts                Defines the 'dog' type
-  /index.ts              Entry point module that re-exposes types from animal.ts and dog.ts
-/zoo                   Depends on 'animals' (directly) and 'core' (indirectly)
-  /tsconfig.json         Config file for 'zoo' project
-  /zoo.ts                Creates a zoo with some dogs in it (OK it's a weird zoo)
-/tsconfig.json           Solution file for the application
+yarn clean
+npx webpack <- Module not found: Error: Can't resolve '../lib/zoo/zoo'
+tsc -b
+npx webpack <- OK
 ```
 
-#### Build and Build Configuration
+With projectReferences = true ts-loader will build the references at the start of the build:
 ```
-/core                  Base library for this application
-/lib                   Output folder (not checked in)
-/tsconfig-base.json    Shared configuration file for common compiler options
-```
-
-#### The Usual Suspects
-```
-/README.md             You're reading it
-/.gitignore            For excluding build outputs and node_modules
-/package.json          NPM package definition file
-/package-lock.json     NPM package lock file
-/node_modules          NPM modules
+yarn clean
+npx webpack <- OK
 ```
 
-# Branches You Can Try
+If a change is made to src/index.ts and npx webpack run again, the change will be reflected in the final output dist/main.js
 
-The following branches are provided for demo/exploration purposes
+If a change is made to zoo/zoo.ts and npx webpack run again, the change will be reflected in both lib/zoo/zoo.js and the final output.  ts-loader causes the references to be rebuilt because they were out of date.
 
-### `master`
-This branch shows the normal layout
+## Project references & transpileOnly
 
+If an error is introduced in src/index.ts the error not be reported when npx webpack is run:
 ```
-> git checkout master
->yarn build
-yarn run v1.15.2
-$ tsc -b -v
-[11:02:33 AM] Projects in this build:
-    * core/tsconfig.json
-    * animals/tsconfig.json
-    * zoo/tsconfig.json
-    * tsconfig.json
-
-[11:02:33 AM] Project 'core/tsconfig.json' is out of date because output file 'lib/core/utilities.js' does not exist
-
-[11:02:33 AM] Building project 'c:/github/project-references-demo/core/tsconfig.json'...
-
-[11:02:35 AM] Project 'animals/tsconfig.json' is out of date because output file 'lib/animals/animal.js' does not exist
-
-[11:02:35 AM] Building project 'c:/github/project-references-demo/animals/tsconfig.json'...
-
-[11:02:35 AM] Project 'zoo/tsconfig.json' is out of date because output file 'lib/zoo/zoo.js' does not exist
-
-[11:02:35 AM] Building project 'c:/github/project-references-demo/zoo/tsconfig.json'...
-
-Done in 2.66s.
-
->
+console.log(newZoo[0].namex);
 ```
 
-### `circular`
-This branch introduces a circular dependency by editing the `core` project's `tsconfig.json` to add a dependency to `zoo`.
-Attempting to build any project will cause an error:
+If an error is introduced in animals/dog.ts the error will be reported when npx webpack is run and lib/animals/dog.ts will not be updated.  I believe this behaviour is expected.  transpileOnly will only affect files processed by directly ts-loader. ts-loader will initiate the build of referenced projects but any errors will be reported despite transpileOnly being set.  I don't consider this to be a bug although documentation would help to avoid confusion.
+
+## Project references, transpileOnly & ForkTsCheckerWebpackPlugin
+
+If the same error is introduced in src/index.ts the error will be reported when npx webpack is run.  This is as expected as transpileOnly in ts-loader turns off syntax checking and ForkTsCheckerWebpackPlugin turns it on again.
+
+It is not clear to me what effect project references has on ForkTsCheckerWebpackPlugin.  The documentation says they are supported, but errors in project references will cannot be turned off by ts-loader, so they will be reported anyway.  I don't understand in what sense ForkTsCheckerWebpackPlugin is supporting project references but I also don't see any bug here.
+
+I do notice that in watch mode after yarn clean I see the following output in watch mode:
 ```
-> git checkout circular
-> yarn build
-yarn run v1.15.2
-$ tsc -b -v
-[11:52:04 AM] Projects in this build:
-    * animals/tsconfig.json
-    * zoo/tsconfig.json
-    * core/tsconfig.json
-    * tsconfig.json
-
-error TS6202: Project references may not form a circular graph. Cycle detected: c:/github/project-references-demo/tsconfig.json
-c:/github/project-references-demo/core/tsconfig.json
-c:/github/project-references-demo/zoo/tsconfig.json
-c:/github/project-references-demo/animals/tsconfig.json
-
-
-Found 1 error.
-
-error Command failed with exit code 4.
-info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
-
->
-
+Issues checking in progress...
+Issues checking in progress...
+Issues checking in progress...
+Issues checking in progress...
 ```
+On the next run I only see one line. So it looks as if ForkTsCheckerWebpackPlugin is checking each of the project references. As they will already be checked when ts-loader initiates the build this seems to be a duplicated effort, although as ForkTsChecker runs on a separate thread it probably does not affect performance.
 
-### `bad-ref`
-This branch introduces an illegal reference in the source code by adding an `import` targeting a file outside the project folder. Attempting to build `core` will cause an error:
-```
-> git checkout bad-ref
->yarn build
-yarn run v1.15.2
-$ tsc -b -v
-[1:40:34 PM] Projects in this build:
-    * core/tsconfig.json
-    * animals/tsconfig.json
-    * zoo/tsconfig.json
-    * tsconfig.json
+## Watch mode
 
-[1:40:34 PM] Project 'core/tsconfig.json' is out of date because output file 'lib/core/utilities.js' does not exist
+Setting watch: true in webpack.config.js works as you would expect.
 
-[1:40:34 PM] Building project 'c:/github/project-references-demo/core/tsconfig.json'...
+After making changes to files the changes are reflected in the final output and in lib (if a project reference file is changed).  If transpileOnly is true errors in src/index.ts are not reported unless ForkTsCheckerWebpackPlugin is enabled, in which case they are.
 
-animals/index.ts:1:20 - error TS6059: File 'c:/github/project-references-demo/animals/animal.ts' is not under 'rootDir' 'c:/github/project-references-demo/core'. 'rootDir' is expected to contain all source files.
+## Summary
 
-1 import Animal from './animal';
-                     ~~~~~~~~~~
+This is a limited example but I believe webpack, ts-loader, ForkTsCheckerWebpackPlugin are all behaving as expected with project references.  If someone has a repo with a counter example I would be pleased to take a look.
 
-animals/index.ts:1:20 - error TS6307: File 'c:/github/project-references-demo/animals/animal.ts' is not listed within the file list of project 'c:/github/project-references-demo/core/tsconfig.json'. Projects must list all files or use an 'include' pattern.
+# Performance
 
-1 import Animal from './animal';
-                     ~~~~~~~~~~
+With webpack-dev-server, once the initial build is complete, changes to src/index.ts are built within 100ms.  In larger projects this will be longer but it seems webpack and ts-loader do a great job and can rebuild after a single file change in less than a second.
 
-animals/index.ts:4:32 - error TS6059: File 'c:/github/project-references-demo/animals/dog.ts' is not under 'rootDir' 'c:/github/project-references-demo/core'. 'rootDir' is expected to contain all source files.
+Making a change in animals/dog.ts causes 2 compilations.  The first is the compilation of the reference which takes around 1 second and the second compilation is less than 100ms when the project is rebuilt using the new output in lib.  With webpack-dev-server both compilations are reported in the webpack log.  With webpack and watch: true only the second compilation is reported although a delay of around 1 second is noticeable before the second compilation starts.
 
-4 import { createDog, Dog } from './dog';
-                                 ~~~~~~~
+If you turn off projectReferences in ts-loader and execute tsc -b -w in a different shell, the effect is the same.  You can see tsc -b -w takes around 1 second to compile the reference and then webpack builds the project. This is as expected because, under the hood, ts-loader is just using tsb to build the referenced projects.  It is just more convenient than having to run tsc separately.
 
-animals/index.ts:4:32 - error TS6307: File 'c:/github/project-references-demo/animals/dog.ts' is not listed within the file list of project 'c:/github/project-references-demo/core/tsconfig.json'. Projects must list all files or use an 'include' pattern.
+## Performance Summary
 
-4 import { createDog, Dog } from './dog';
-                                 ~~~~~~~
+This is a tiny project.  It is possible that with a larger project there will be a significant performance difference, but from this repo ts-loader appears to be behaving as expected.  I will generate more source files to investigate.
 
-core/utilities.ts:1:1 - error TS6133: 'A' is declared but its value is never read.
-
-1 import * as A from '../animals';
-  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-core/utilities.ts:1:20 - error TS6059: File 'c:/github/project-references-demo/animals/index.ts' is not under 'rootDir' 'c:/github/project-references-demo/core'. 'rootDir' is expected to contain all source files.
-
-1 import * as A from '../animals';
-                     ~~~~~~~~~~~~
-
-core/utilities.ts:1:20 - error TS6307: File 'c:/github/project-references-demo/animals/index.ts' is not listed within the file list of project 'c:/github/project-references-demo/core/tsconfig.json'. Projects must list all files or use an 'include' pattern.
-
-1 import * as A from '../animals';
-                     ~~~~~~~~~~~~
-
-[1:40:35 PM] Project 'animals/tsconfig.json' can't be built because its dependency 'core' has errors
-
-[1:40:35 PM] Skipping build of project 'c:/github/project-references-demo/animals/tsconfig.json' because its dependency 'c:/github/project-references-demo/core' has errors
-
-[1:40:35 PM] Project 'zoo/tsconfig.json' can't be built because its dependency 'animals' was not built
-
-[1:40:35 PM] Skipping build of project 'c:/github/project-references-demo/zoo/tsconfig.json' because its dependency 'c:/github/project-references-demo/animals' was not built
-
-
-Found 7 errors.
-
-error Command failed with exit code 1.
-info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
-
->
-```
-
-### `empty-sleeves`
-Nothing up my sleeves 🐇🎩!
-This branch *deletes* the `core` and `animals` source files.
-The `zoo` project can still be built because it only consumes the output files.
-```
-> gulp clean
-[...]
-> gulp core animals
-[...]
-> git checkout empty-sleeves
-> gulp zoo
-[07:35:22] Using gulpfile C:\github\project-references-demo\gulpfile.js
-[07:35:22] Starting 'zoo'...
-[07:35:24] Finished 'zoo' after 2.15 s
-```
+I have not considered startup time here.  I believe running tsc in a separate process could provide some benefit there for larger projects.
