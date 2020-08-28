@@ -24,7 +24,7 @@ I again run webpack in watch mode and in a second shell run <code>tsc -b -w -v</
 
 ## Without Project References
 
-I then changed <code>src/index.ts</code> so that it imports the TS code directly, instead of the compiled code in lib:
+I then reset the entrypoint and changed <code>src/index.ts</code> so that it imports the TS code directly, instead of the compiled code in lib:
 ```
 import { createZoo } from '../zoo/zoo';
 import { Dog } from '../animals/dog';

@@ -1,7 +1,7 @@
 {
   "name": "project-references-demo",
   "version": "1.0.0",
-  "description": "The structure of this repo is as follows:",
+  "description": "To compare the performance of project references with webpack & ts-loader vs webpack and tsc run in a separate process.",
   "main": "index.js",
   "scripts": {
     "buildtsc": "tsc -b -v",
@@ -12,14 +12,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/RyanCavanaugh/project-references-demo.git"
+    "url": "git+https://github.com/appzuka/project-references-demo.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/RyanCavanaugh/project-references-demo/issues"
+    "url": "https://github.com/appzuka/project-references-demo.git/issues"
   },
-  "homepage": "https://github.com/RyanCavanaugh/project-references-demo#readme",
+  "homepage": "https://github.com/appzuka/project-references-demo.git",
   "dependencies": {
     "@babel/core": "^7.11.4",
     "@babel/preset-react": "^7.10.4",
@@ -33,9 +33,7 @@
     "typescript": "^3.9.7",
     "webpack": "^4.44.1",
     "webpack-cli": "^3.3.12",
-    "webpack-dev-server": "^3.11.0"
-  },
-  "devDependencies": {
+    "webpack-dev-server": "^3.11.0",
     "fork-ts-checker-webpack-plugin": "^5.1.0"
   }
 }
