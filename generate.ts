@@ -13,7 +13,7 @@ const busyLines = `for(let i=0;i<1000;i++) {
   f1(42);
 };`;
 
-const busyWork = 10;  // The number of times to include busyLines in each file
+const busyWork = 100;  // The number of times to include busyLines in each file
 
 const iterate = (i, f) => {
   return Array(i).fill(0).map((v,j) => f(j)).join('\n')
@@ -56,7 +56,7 @@ ${iterate(last, (i) => `    <Generated_${i} />`)}
 
 // Nested loop implemented with recursion
 
-const depths = [2,2];
+const depths = [10,10];
 const counters = new Array(depths.length).fill(0);
 
 const nestedLoopOperation = (counters, depths, level) => {

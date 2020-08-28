@@ -20,7 +20,7 @@ module.exports = {
                   "loader": "ts-loader",
                   "options": {
                       "transpileOnly": false,
-                      "projectReferences": true
+                      "projectReferences": false
                   }
               }
           }
@@ -31,7 +31,7 @@ module.exports = {
       "node_modules",
       path.resolve(__dirname)
     ],
-    extensions: [".js", ".ts"]
+    extensions: [".js", ".ts", ".tsx"]
   },
   // plugins: [new ForkTsCheckerWebpackPlugin()]
 }

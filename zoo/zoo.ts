@@ -3,7 +3,7 @@ import { Dog, createDog } from '../animals/index';
 
 import { GeneratedContent } from './generated/generatedindex'
 
-const x = 47;
+const x = 44;
 
 export function createZoo(): Array<Dog> {
 

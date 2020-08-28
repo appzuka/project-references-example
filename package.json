@@ -4,8 +4,11 @@
   "description": "The structure of this repo is as follows:",
   "main": "index.js",
   "scripts": {
-    "build": "tsc -b -v",
-    "clean": "tsc -b --clean"
+    "buildtsc": "tsc -b -v",
+    "watchtsc": "tsc -b -w -v",
+    "clean": "tsc -b --clean",
+    "build": "webpack",
+    "generate": "rm -f zoo/generated/*.tsx; ts-node generate.ts"
   },
   "repository": {
     "type": "git",

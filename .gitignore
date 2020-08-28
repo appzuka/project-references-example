@@ -2,3 +2,4 @@ lib/
 node_modules/
 dist/
 zoo/generated/*.tsx
+zoo/generated/*.d.ts

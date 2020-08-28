@@ -9,6 +9,7 @@
         "noUnusedParameters": true,
         "noImplicitReturns": true,
         "noFallthroughCasesInSwitch": true,
-        "composite": true
+        "composite": true,
+        "jsx": "react",
     }
 }
