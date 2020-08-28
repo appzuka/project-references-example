@@ -8,7 +8,7 @@ module.exports = {
       "path": __dirname+'/dist',
       "filename": "[name].js"
   },
-  "watch": false,
+  "watch": true,
   "context": __dirname, // to automatically find tsconfig.json
   "module": {
       "rules": [
@@ -20,7 +20,7 @@ module.exports = {
                   "loader": "ts-loader",
                   "options": {
                       "transpileOnly": false,
-                      "projectReferences": false
+                      "projectReferences": true
                   }
               }
           }
