@@ -1,6 +1,4 @@
-// import Animal from '../animals/index';
 import { Dog, createDog } from '../animals/index';
-
 import { GeneratedContent } from './generated/generatedindex'
 
 const x = 44;

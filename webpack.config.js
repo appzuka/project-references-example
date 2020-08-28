@@ -20,7 +20,7 @@ module.exports = {
                   "loader": "ts-loader",
                   "options": {
                       "transpileOnly": false,
-                      "projectReferences": false
+                      "projectReferences": true
                   }
               }
           }

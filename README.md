@@ -14,7 +14,7 @@ const busyWork = 100;
 ```
 the generated code will contain around 100 files in 2 layers each with 100 repeated blocks of code to give the compiler some work to do.
 
-With webpack in watch mode I run <code>npx webpack</code>.  After the initial compile I make a change to <code>zoo/zoo.ts</code>.  Webpack reports 2 compiles (for reasons which are understood).  The first takes 3.2 seconds and the second 0.8s.
+With webpack in watch mode I run <code>yarn build</code>.  After the initial compile I make a change to <code>zoo/zoo.ts</code>.  Webpack reports 2 compiles (for reasons which are understood).  The first takes 3.2 seconds and the second 0.8s.
 
 I then change the entrypoint in <code>webpack.config.js</code> to point to the compiled javascript:
 ```
