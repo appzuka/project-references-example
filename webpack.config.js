@@ -1,14 +1,17 @@
 const path = require('path');
-const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
+// To improve build times for large projects enable fork-ts-checker-webpack-plugin
+// const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 
 module.exports = {
   "mode": "development",
-  "entry": "src/index.ts",
+  "entry": "src/index.tsx",
   "output": {
       "path": __dirname+'/dist',
       "filename": "[name].js"
   },
-  "watch": true,
+  "watch": false,
   "context": __dirname, // to automatically find tsconfig.json
   "module": {
       "rules": [
@@ -16,10 +19,9 @@ module.exports = {
               "test": /\.tsx?$/,
               "exclude": /node_modules/,
               "use": {
-                  // "loader": "babel-loader",
                   "loader": "ts-loader",
                   "options": {
-                      "transpileOnly": false,
+                      "transpileOnly": false, // Set to true if you are using fork-ts-checker-webpack-plugin
                       "projectReferences": true
                   }
               }
@@ -31,7 +33,30 @@ module.exports = {
       "node_modules",
       path.resolve(__dirname)
     ],
-    extensions: [".js", ".ts", ".tsx"]
+    // TsconfigPathsPlugin will automatically add this
+    // alias: {
+    //   packages: path.resolve(__dirname, 'packages/'),
+    // },
+    extensions: [".js", ".ts", ".tsx"],
+    plugins: [
+      new TsconfigPathsPlugin({
+        logLevel: "info",
+        mainFields: "module",
+        extensions: [".js", ".ts", ".tsx"]
+      })
+    ]
   },
-  // plugins: [new ForkTsCheckerWebpackPlugin()]
+  plugins: [
+    new HtmlWebpackPlugin({
+      templateContent: `
+        <html>
+          <body>
+            <h1>Project Reference Demo App</h1>
+            <div id='react-content'></div>
+          </body>
+        </html>
+      `
+    }),
+    // new ForkTsCheckerWebpackPlugin()
+  ]
 }
