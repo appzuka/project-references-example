@@ -39,11 +39,7 @@ module.exports = {
     // },
     extensions: [".js", ".ts", ".tsx"],
     plugins: [
-      new TsconfigPathsPlugin({
-        logLevel: "info",
-        mainFields: "module",
-        extensions: [".js", ".ts", ".tsx"]
-      })
+      new TsconfigPathsPlugin({})
     ]
   },
   plugins: [
