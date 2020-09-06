@@ -12,5 +12,8 @@
       "paths": {
       "packages/*": ["packages/*"]
     }
-  }
+  },
+  "include": [
+    "./custom.d.ts"
+  ]
 }

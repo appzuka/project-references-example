@@ -6,5 +6,10 @@
   },
   "references": [
     { "path": "../core" }
+  ],
+  "include": [
+    "./src/**/*",
+    "./assets/**/*",
+    "custom.d.ts"
   ]
 }

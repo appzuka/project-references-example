@@ -25,6 +25,10 @@ module.exports = {
                       "projectReferences": true
                   }
               }
+          },
+          {
+            test: /\.txt$/,
+            loader: 'raw-loader',
           }
       ]
   },
