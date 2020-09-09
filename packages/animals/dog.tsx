@@ -1,10 +1,13 @@
 import { Animal, Size } from './animal';
 import { makeRandomName } from '@myscope/core';
+// import { foo } from './foo';
+// foo();
 
 interface Dog extends Animal {
     woof(): void;
     name: string;
 }
+//c
 
 const sizes = "small medium large".split(' ');
 const barks = "Woof Yap Growl".split(' ');

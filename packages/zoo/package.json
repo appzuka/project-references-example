@@ -6,5 +6,8 @@
   "directories": {
     "lib": "lib"
   },
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "typescript": "^4.0.2"
+  }
 }
