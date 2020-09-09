@@ -1,26 +1,33 @@
 # TypeScript Project References Demo
 
-This repo is forked from https://github.com/RyanCavanaugh/project-references-demo, which is a repo to demonstrate the use of project references in TYpeScript.  It has been extended to show how project references can be used in a project using the following:
+This branch is to test the behaviour of issue 1179 in ts-loader:
 
-* TypeScript
-* Webpack
-* ts-loader
-* yarn workspaces
-
-This repo is described in the article at the link below.  Please see the article for further details.
-
-<TODO: Insert link to article>
+https://github.com/TypeStrong/ts-loader/issues/1179
 
 ## Installation
 ```
 yarn install
 ```
 
-## Running
-```
-yarn start
-```
-Go to localhost:8080 in your browser to view the output. Edit files in the <code>packages</code> to see the changes in the browser.
+## Demonstrating Behaviour in ts-loader
+
+* npx webpack --watch
+* rename packages/animals/foo.renametots to foo.ts
+* edit packages/animals/dog.tsx
+
+You will observe that the build fails because foo.ts was not included in tsconfig.json
+
+## Demonstrating Behaviour in tsc
+
+* reset packages/animals/foo.renametots and dog.tsx
+* set projectReferences to false in webpack.config.js
+* In one terminal cd to packages/zoo
+* npx tsc -b -w -v
+* In another terminal run
+* npx webpack --watch
+
+Make the same changes as above and observe that tsc correctly rebuilds the packages and then webpack correctly rebuilds the final app
+
 
 
 
