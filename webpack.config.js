@@ -8,25 +8,25 @@ module.exports = {
   "mode": "development",
   "entry": "src/index.tsx",
   "output": {
-      "path": __dirname+'/dist',
-      "filename": "[name].js"
+    "path": __dirname+'/dist',
+    "filename": "[name].js"
   },
   "watch": false,
   "context": __dirname, // to automatically find tsconfig.json
   "module": {
-      "rules": [
-          {
-              "test": /\.tsx?$/,
-              "exclude": /node_modules/,
-              "use": {
-                  "loader": "ts-loader",
-                  "options": {
-                      "transpileOnly": false, // Set to true if you are using fork-ts-checker-webpack-plugin
-                      "projectReferences": true
-                  }
-              }
+    "rules": [
+      {
+        "test": /\.tsx?$/,
+        "exclude": /node_modules/,
+        "use": {
+          "loader": "ts-loader",
+          "options": {
+            "transpileOnly": false, // Set to true if you are using fork-ts-checker-webpack-plugin
+            "projectReferences": true
           }
-      ]
+        }
+      }
+    ]
   },
   resolve: {
     modules: [
