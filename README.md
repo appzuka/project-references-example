@@ -9,7 +9,7 @@ This repo is forked from https://github.com/RyanCavanaugh/project-references-dem
 
 This repo is described in the article at the link below.  Please see the article for further details.
 
-<TODO: Insert link to article>
+[Article](https://medium.com/@nickexcell/using-typescript-project-references-with-ts-loader-and-webpack-part-1-5d0c3cd7c603)
 
 ## Installation
 ```
